@@ -21,6 +21,7 @@ import lombok.NonNull;
 
 @RestController
 @RequestMapping(path = "${api-endpoint}/posts")
+
 public class PostController {
 
     private final IPostService postService;
@@ -48,7 +49,7 @@ public class PostController {
         return ResponseEntity.status(HttpStatus.OK).body(post);
     }
 
-    @PostMapping("/store") // Ruta única para guardar un post
+    @PostMapping("/store") 
     public ResponseEntity<Post> store(@RequestBody PostDTO postDTO) {
         Post post = postService.save(postDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(post);

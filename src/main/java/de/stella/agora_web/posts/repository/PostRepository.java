@@ -17,4 +17,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
    
     @SuppressWarnings("null")
     Optional<Post> findById(Long id);
+
+    List<Post> findByPostname(String postname);
 }

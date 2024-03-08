@@ -16,24 +16,38 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-    @Setter
-    @Getter
-    @Entity(name = "Post")
-    @AllArgsConstructor
-    @NoArgsConstructor
-    @ToString
-    @Table(name = "posts")
-    public class Post {
-        @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
-        private Long id;
-        private String title;
-        private String message;
-        private LocalDateTime creationDate = LocalDateTime.now();
+@Setter
+@Getter
+@Entity(name = "Post")
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
+@Table(name = "posts")
+public class Post {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String title;
+    private String message;
+    private LocalDateTime creationDate = LocalDateTime.now();
+    private String postname;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User author;
 
-        @ManyToOne
-        @JoinColumn(name = "user_id")
-        private User author;
+    public String getPostname() {
+        return postname;
     }
-   
 
+    public void setPostname(String postname) {
+        this.title = postname;
+    }
+
+    public String getContent() {
+        return message;
+    }
+
+    public void setContent(String content) {
+        this.message = content;
+    }
+}
