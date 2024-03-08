@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Set;
 
 import de.stella.agora_web.posts.model.Post;
+import de.stella.agora_web.replys.model.Reply;
 import de.stella.agora_web.roles.model.Role;
 
 
@@ -32,8 +33,8 @@ import de.stella.agora_web.roles.model.Role;
         @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
         private List<Post> posts;
 
-        // @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
-        // private List<Reply> replies;
+        @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
+        private List<Reply> replies;
 
         @ManyToMany(fetch = FetchType.LAZY)
         @JoinTable(

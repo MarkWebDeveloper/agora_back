@@ -1,6 +1,7 @@
 package de.stella.agora_web.posts.model;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import de.stella.agora_web.user.model.User;
 import jakarta.persistence.Entity;
@@ -49,5 +50,9 @@ public class Post {
 
     public void setContent(String content) {
         this.message = content;
+    }
+
+    public void setAuthor(Optional<User> user) {
+        throw new UnsupportedOperationException("Unimplemented method 'setAuthor'");
     }
 }

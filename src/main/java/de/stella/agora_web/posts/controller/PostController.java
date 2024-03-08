@@ -1,6 +1,8 @@
 package de.stella.agora_web.posts.controller;
 
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +18,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import de.stella.agora_web.posts.controller.dto.PostDTO;
 import de.stella.agora_web.posts.model.Post;
+import de.stella.agora_web.posts.repository.PostRepository;
 import de.stella.agora_web.posts.services.IPostService;
+import de.stella.agora_web.user.model.User;
+import de.stella.agora_web.user.repository.UserRepository;
 import lombok.NonNull;
 
 @RestController
@@ -65,5 +70,20 @@ public class PostController {
     public ResponseEntity<Post> update(@PathVariable("id") Long id, @RequestBody PostDTO postDTO) {
         Post post = postService.update(postDTO, id);
         return ResponseEntity.accepted().body(post);
+    }
+
+
+    @Autowired
+    private PostRepository postRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @PostMapping
+    public ResponseEntity<Post> createPost(@RequestBody Post post) {
+        Optional<User> user = userRepository.findByUsername("usuario");
+        post.setAuthor(user);
+        Post savedPost = postRepository.save(post);
+        return ResponseEntity.ok(savedPost);
     }
 }
