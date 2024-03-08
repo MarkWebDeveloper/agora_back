@@ -1,0 +1,4 @@
+INSERT INTO texts (title, description, image) VALUES
+('Lorem ipsum dolor sit amet', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor.', 'image1'),
+('Curabitur at ipsum ac tellus semper interdum', 'Curabitur at ipsum ac tellus semper interdum. Morbi tincidunt, dui sit amet facilisis feugiat, odio metus gravida ante, ut pharetra massa metus id nunc.', 'image2'),
+('In facilisis. In sapien ipsum, porta a, auctor quis, euismod sed, lectus.', 'In facilisis. In sapien ipsum, porta a, auctor quis, euismod sed, lectus. Sed bibendum ultrices ante. Sed mollis. Integer tincidunt. Cras tincidunt turpis and a elit.', 'image3');
