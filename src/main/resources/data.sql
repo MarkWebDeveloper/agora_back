@@ -12,3 +12,10 @@ SET @user_id = (SELECT id FROM users WHERE username = 'usuario' LIMIT 1);
 -- -- Insertar un post con el usuario como autor
 INSERT INTO posts (title, message, creation_date, postname, user_id)
 VALUES ('Titulo del post', 'Contenido del post', NOW(), 'nombre_del_post', @user_id);
+
+
+-- INSERT INTO replys (id, title, message, creation_date, user_id)
+-- VALUES (2, 'Respuesta al post 1', 'Esta es una respuesta al post 1', NOW(), 1);
+
+-- INSERT INTO replys (id, title, message, creation_date, user_id)
+-- VALUES (3, 'Respuesta al post 2', 'Esta es una respuesta al post 2', NOW(), 2);
