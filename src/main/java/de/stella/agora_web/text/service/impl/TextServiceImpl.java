@@ -3,6 +3,7 @@ package de.stella.agora_web.text.service.impl;
 import de.stella.agora_web.text.controller.dto.TextDTO;
 import de.stella.agora_web.text.model.Text;
 import de.stella.agora_web.text.persistence.ITextDAO;
+import de.stella.agora_web.text.repository.TextRepository;
 import de.stella.agora_web.text.service.ITextService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,8 +16,16 @@ public class TextServiceImpl implements ITextService {
 
     @Autowired
     private ITextDAO textDAO;
+    @SuppressWarnings("unused")
+    private TextRepository textRepository;
+
+ 
 
     @Override
+    public void setTextRepository(TextRepository textRepository) {
+        this.textRepository = textRepository;
+    }
+
     public List<Text> findTextsById(Collection<Long> textId) {
         return textDAO.findAllByIdIn(textId);
     }
@@ -27,7 +36,12 @@ public class TextServiceImpl implements ITextService {
     }
 
     @Override
-    public Object findAll() {
+    public List<Text> findAll() {
+        return textDAO.findAll();
+    }
+
+    @Override
+    public List<Text> getAll() {
         return textDAO.findAll();
     }
 

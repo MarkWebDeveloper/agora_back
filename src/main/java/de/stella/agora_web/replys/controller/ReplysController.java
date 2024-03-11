@@ -14,6 +14,7 @@ import de.stella.agora_web.replys.services.IReplyService;
 @RequestMapping(path = "${api-endpoint}/replies") 
 public class ReplysController {
 
+    @SuppressWarnings("unused")
     private final IReplyService replyService;
 
     public ReplysController(IReplyService replyService) {
@@ -22,7 +23,7 @@ public class ReplysController {
 
     @PostMapping
     @PreAuthorize("hasRole('USER')")
-    public void createReply(@RequestBody ReplyDTO replyDTO) {
+    public void createReply(@SuppressWarnings("rawtypes") @RequestBody ReplyDTO replyDTO) {
         // Implementación del método
     }
 }

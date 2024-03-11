@@ -33,14 +33,14 @@ public class PostServiceImpl implements IPostService {
     }
 
     @Override
-    public Post createPost(PostDTO postDTO, User user) {
+    public Post createPost(@SuppressWarnings("rawtypes") PostDTO postDTO, User user) {
         Post post = new Post();
         // Asignar valores de postDTO al post
         return postRepository.save(post);
     }
 
     @Override
-    public Post updatePost(Long id, PostDTO postDTO) {
+    public Post updatePost(Long id, @SuppressWarnings("rawtypes") PostDTO postDTO) {
         Post existingPost = postRepository.findById(id).orElse(null);
         if (existingPost != null) {
             // Actualizar valores de existingPost con los datos de postDTO
@@ -49,6 +49,7 @@ public class PostServiceImpl implements IPostService {
         return null;
     }
 
+    @SuppressWarnings("null")
     @Override
     public void deletePost(Long id) {
         postRepository.deleteById(id);
@@ -60,19 +61,20 @@ public class PostServiceImpl implements IPostService {
     }
 
     @Override
-    public Post save(PostDTO postDTO) {
+    public Post save(@SuppressWarnings("rawtypes") PostDTO postDTO) {
         Post post = new Post();
         // Asignar valores de postDTO al post
         return postRepository.save(post);
     }
 
+    @SuppressWarnings("null")
     @Override
     public void deleteById(Long id) {
         postRepository.deleteById(id);
     }
 
     @Override
-    public Post update(PostDTO postDTO, Long id) {
+    public Post update(@SuppressWarnings("rawtypes") PostDTO postDTO, Long id) {
         Post existingPost = postRepository.findById(id).orElse(null);
         if (existingPost != null) {
             // Actualizar valores de existingPost con los datos de postDTO
@@ -82,7 +84,7 @@ public class PostServiceImpl implements IPostService {
     }
 
     @Override
-    public Post createPost(PostDTO postDTO) {
+    public Post createPost(@SuppressWarnings("rawtypes") PostDTO postDTO) {
         throw new UnsupportedOperationException("Unimplemented method 'createPost'");
     }
 }

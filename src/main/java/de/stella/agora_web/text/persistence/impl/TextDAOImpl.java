@@ -6,7 +6,7 @@ import de.stella.agora_web.text.repository.TextRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.data.jpa.repository.JpaRepository;
+
 import java.util.Collection;
 import java.util.List;
 
@@ -21,21 +21,25 @@ public class TextDAOImpl implements ITextDAO {
     private TextRepository textRepository;
    
 
+    @SuppressWarnings("null")
     @Override
     public Text save(Text text) {
         return textRepository.save(text);
     }
 
+    @SuppressWarnings("null")
     @Override
     public Text findById(Long id) {
         return textRepository.findById(id).orElse(null);
     }
 
+    @SuppressWarnings("null")
     @Override
-    public List<Text> findAllByIdIn(Collection<Long> ids) {
-        return textRepository.findAllById(ids);
+    public List<Text> findAllByIdIn(Collection<Long> id) {
+        return textRepository.findAllById(id);
     }
 
+    @SuppressWarnings("null")
     @Override
     public void deleteById(Long id) {
         textRepository.deleteById(id);

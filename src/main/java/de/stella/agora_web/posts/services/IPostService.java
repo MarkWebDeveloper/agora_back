@@ -31,6 +31,6 @@ public interface IPostService {
 
     @SuppressWarnings("rawtypes")
     Post update(PostDTO postDTO, Long id);
-    Post createPost(PostDTO postDTO);
+    Post createPost(@SuppressWarnings("rawtypes") PostDTO postDTO);
     Post getById(@NonNull Long id);
 }

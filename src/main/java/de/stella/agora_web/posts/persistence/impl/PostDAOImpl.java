@@ -48,6 +48,7 @@ public class PostDAOImpl implements IPostDAO {
         save(post);
     }
 
+    @SuppressWarnings("null")
     @Override
     public void deleteById(Long id) {
         Objects.requireNonNullElse(id, 0L);
