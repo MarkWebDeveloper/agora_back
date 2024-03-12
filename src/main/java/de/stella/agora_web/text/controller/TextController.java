@@ -25,7 +25,7 @@ import de.stella.agora_web.text.service.ITextService;
 
 
 @RestController
-@RequestMapping("api/v1/texts")
+@RequestMapping("${api-endpoint}/texts")
 public class TextController {
 
     private ITextService textService;
@@ -35,7 +35,7 @@ public class TextController {
         this.textService = textService;
     }
 
-    @GetMapping
+    @GetMapping("")
     public List<Text> getAllTexts() {
         return textService.getAll();
     }

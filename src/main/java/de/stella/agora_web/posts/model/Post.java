@@ -56,3 +56,4 @@ public class Post {
         throw new UnsupportedOperationException("Unimplemented method 'setAuthor'");
     }
 }
+

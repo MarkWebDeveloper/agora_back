@@ -23,7 +23,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @RestController
-@RequestMapping(path = "/users")
+@RequestMapping(path = "${api-endpoint}/users")
 public class UserController {
 
   @Autowired

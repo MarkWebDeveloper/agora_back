@@ -30,9 +30,6 @@ public class SecurityConfiguration {
     @Value("${api-endpoint}")
     String endpoint;
 
-
-
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
@@ -51,7 +48,8 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(auth -> auth
                 // Permite el acceso a las rutas de textos e imágenes para todos.
                 //textos e imagenes paginas estaticas debens ser accesibles por todos pero solo editables por el admin
-                        .requestMatchers(HttpMethod.GET, endpoint + "/texts", endpoint + "/images/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, endpoint + "/images/**").permitAll()
+                        .requestMatchers(HttpMethod.GET,  "/api/v1/texts").permitAll()
                         // Solo permite a los usuarios con rol ADMIN crear textos e imágenes.
                         .requestMatchers(HttpMethod.POST, endpoint + "/texts", endpoint+"/images").hasRole("ADMIN")
                         // Solo permite a los usuarios con rol ADMIN eliminar textos.
@@ -79,7 +77,7 @@ public class SecurityConfiguration {
 
 
                         // Requiere autenticación para cualquier otra solicitud.
-                        .anyRequest().authenticated())
+                        .anyRequest().permitAll())
                 // Configura la autenticación básica HTTP.
                 .httpBasic(Customizer.withDefaults())
                 // Configura la política de creación de sesiones.
