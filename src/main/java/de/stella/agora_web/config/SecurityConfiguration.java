@@ -2,22 +2,44 @@ package de.stella.agora_web.config;
 
 import java.util.Arrays;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.JwtEncoder;
+import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
+import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationProvider;
+import org.springframework.security.oauth2.server.resource.web.BearerTokenAuthenticationEntryPoint;
+import org.springframework.security.oauth2.server.resource.web.access.BearerTokenAccessDeniedHandler;
+import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import de.stella.agora_web.user.services.JpaUserDetailsService;
+import com.nimbusds.jose.jwk.JWK;
+import com.nimbusds.jose.jwk.JWKSet;
+import com.nimbusds.jose.jwk.RSAKey;
+import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
+import com.nimbusds.jose.jwk.source.JWKSource;
+import com.nimbusds.jose.proc.SecurityContext;
+
+import de.stella.agora_web.config.oauth.JWTtoUserConverter;
+import de.stella.agora_web.config.oauth.KeyUtils;
 
 @Configuration
 @EnableWebSecurity
@@ -25,12 +47,34 @@ public class SecurityConfiguration {
 
   @Value("${api-endpoint}")
   String endpoint;
+    @Autowired
+    JWTtoUserConverter jwtToUserConverter; 
 
-  JpaUserDetailsService jpaUserDetailsService;
+    @Autowired
+    KeyUtils keyUtils; 
 
-  public SecurityConfiguration(JpaUserDetailsService jpaUserDetailsService) {
-    this.jpaUserDetailsService = jpaUserDetailsService;
-  }
+    @Autowired
+    PasswordEncoder passwordEncoder; 
+    
+    @Autowired
+    UserDetailsManager userDetailsManager; 
+    @Autowired
+    private UserDetailsService userDetailsService;
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Autowired
+    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+    }
+  //JpaUserDetailsService jpaUserDetailsService;
+
+ // public SecurityConfiguration(JpaUserDetailsService jpaUserDetailsService) {
+  //  this.jpaUserDetailsService = jpaUserDetailsService;
+  //}
 
   @Bean
   SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -38,9 +82,9 @@ public class SecurityConfiguration {
       .cors(Customizer.withDefaults())
       .csrf(csrf -> csrf.disable())
       .formLogin(form -> form.disable())
-      .logout(out ->
-        out.logoutUrl(endpoint + "/logout").deleteCookies("JSESSIONID")
-      )
+     // .logout(out ->
+      //  out.logoutUrl(endpoint + "/logout").deleteCookies("JSESSIONID")
+     // )
       .authorizeHttpRequests(auth -> auth
           // Permitir el acceso a todos los posts para usuarios registrados
           .requestMatchers(HttpMethod.GET, endpoint + "/posts/**").permitAll()
@@ -79,17 +123,71 @@ public class SecurityConfiguration {
           .requestMatchers(HttpMethod.GET, endpoint + "/login").permitAll()
           .requestMatchers(HttpMethod.POST, endpoint + "/login").permitAll()
           // Requerir autenticación para todas las demás rutas
-          .anyRequest().permitAll()
+          .anyRequest().authenticated()
       )
-      .httpBasic(Customizer.withDefaults())
-      .sessionManagement(session ->
-        session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-      );
+      .httpBasic(basic -> basic.disable())
+                .oauth2ResourceServer((oauth2) -> 
+                        oauth2.jwt((jwt) -> jwt.jwtAuthenticationConverter(jwtToUserConverter)) 
+                )
+                .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) 
+                .exceptionHandling((exceptions) -> exceptions 
+                                .authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint()) 
+                                .accessDeniedHandler(new BearerTokenAccessDeniedHandler()) 
+                );
+        
+        http.headers(header -> header.frameOptions(frame -> frame.sameOrigin()));
 
-    http.headers(header -> header.frameOptions(frame -> frame.sameOrigin()));
-    return http.build();
-  }
-
+        return http.build();
+    }
+    @Bean
+    @Primary
+    JwtDecoder jwtAccessTokenDecoder() { 
+        return NimbusJwtDecoder.withPublicKey(keyUtils.getAccessTokenPublicKey()).build(); 
+    } 
+  
+    @Bean
+    @Primary
+    JwtEncoder jwtAccessTokenEncoder() { 
+        JWK jwk = new RSAKey 
+                .Builder(keyUtils.getAccessTokenPublicKey()) 
+                .privateKey(keyUtils.getAccessTokenPrivateKey()) 
+                .build(); 
+        JWKSource<SecurityContext> jwks = new ImmutableJWKSet<>(new JWKSet(jwk)); 
+        return new NimbusJwtEncoder(jwks); 
+    } 
+  
+    @Bean
+    @Qualifier("jwtRefreshTokenDecoder") 
+    JwtDecoder jwtRefreshTokenDecoder() { 
+        return NimbusJwtDecoder.withPublicKey(keyUtils.getRefreshTokenPublicKey()).build(); 
+    } 
+  
+    @Bean
+    @Qualifier("jwtRefreshTokenEncoder") 
+    JwtEncoder jwtRefreshTokenEncoder() { 
+        JWK jwk = new RSAKey 
+                .Builder(keyUtils.getRefreshTokenPublicKey()) 
+                .privateKey(keyUtils.getRefreshTokenPrivateKey()) 
+                .build(); 
+        JWKSource<SecurityContext> jwks = new ImmutableJWKSet<>(new JWKSet(jwk)); 
+        return new NimbusJwtEncoder(jwks); 
+    } 
+  
+    @Bean
+    @Qualifier("jwtRefreshTokenAuthProvider") 
+    JwtAuthenticationProvider jwtRefreshTokenAuthProvider() { 
+        JwtAuthenticationProvider provider = new JwtAuthenticationProvider(jwtRefreshTokenDecoder()); 
+        provider.setJwtAuthenticationConverter(jwtToUserConverter); 
+        return provider; 
+    } 
+  
+    @Bean
+    DaoAuthenticationProvider daoAuthenticationProvider() { 
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider(); 
+        provider.setPasswordEncoder(passwordEncoder); 
+        provider.setUserDetailsService(userDetailsManager); 
+        return provider; 
+    }
   @Bean
   CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration configuration = new CorsConfiguration();
@@ -114,9 +212,6 @@ public class SecurityConfiguration {
     return source;
   }
 
-  @Bean
-  PasswordEncoder passwordEncoder() {
-    return new BCryptPasswordEncoder();
-  }
+
 }
 
