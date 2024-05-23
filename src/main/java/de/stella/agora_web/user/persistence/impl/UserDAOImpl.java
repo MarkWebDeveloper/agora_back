@@ -61,4 +61,9 @@ public class UserDAOImpl implements IUserDAO {
     public List<User> findById(List<Long> ids) {
         return userRepository.findAllById(ids);
     }
+
+    @Override
+    public User getLoggedInUser() {
+       return getLoggedInUser();
+    }
 }

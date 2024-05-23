@@ -15,5 +15,6 @@ public interface IUserDAO {
     User update(User user, User updatedUser);
   
     Optional<User> findById(Long id);
+    User getLoggedInUser();
   
 }

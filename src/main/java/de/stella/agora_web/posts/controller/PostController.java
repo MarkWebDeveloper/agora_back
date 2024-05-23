@@ -30,7 +30,7 @@ public class PostController {
     }
 
     @PostMapping("")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('USER','ADMIN')")
     public ResponseEntity<Post> createPost( @RequestBody PostDTO postDTO) {
         Post post = postService.createPost(postDTO, null);
         return ResponseEntity.status(HttpStatus.CREATED).body(post);

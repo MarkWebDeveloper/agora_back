@@ -1,7 +1,9 @@
 package de.stella.agora_web.posts.controller.dto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
+import de.stella.agora_web.replys.controller.dto.ReplyDTO;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,7 +17,8 @@ public class PostDTO {
     private LocalDateTime creationDate;
     private Long userId;
 
-    // private List<ReplyDTO> replies;
+    @SuppressWarnings("rawtypes")
+    private List<ReplyDTO> replies;
     // private TagDTO course;
     // private UserDTO user;
 
