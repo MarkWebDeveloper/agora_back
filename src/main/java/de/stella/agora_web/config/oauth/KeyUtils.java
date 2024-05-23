@@ -47,14 +47,14 @@ public class KeyUtils {
 	private KeyPair _accessTokenKeyPair; 
 	private KeyPair _refreshTokenKeyPair; 
 
-	private KeyPair getAccessTokenKeyPair() { 
+	public KeyPair getAccessTokenKeyPair() { 
 		if (Objects.isNull(_accessTokenKeyPair)) { 
 			_accessTokenKeyPair = getKeyPair(accessTokenPublicKeyPath, accessTokenPrivateKeyPath); 
 		} 
 		return _accessTokenKeyPair; 
 	} 
 
-	private KeyPair getRefreshTokenKeyPair() { 
+	public KeyPair getRefreshTokenKeyPair() { 
 		if (Objects.isNull(_refreshTokenKeyPair)) { 
 			_refreshTokenKeyPair = getKeyPair(refreshTokenPublicKeyPath, refreshTokenPrivateKeyPath); 
 		} 

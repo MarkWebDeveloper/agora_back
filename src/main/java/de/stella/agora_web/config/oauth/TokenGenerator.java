@@ -20,13 +20,21 @@ import de.stella.agora_web.user.model.User;
 @Component
 public class TokenGenerator { 
 	
-	@Autowired
-	JwtEncoder accessTokenEncoder; 
+
 
 	@Autowired
 	@Qualifier("jwtRefreshTokenEncoder") 
-	JwtEncoder refreshTokenEncoder; 
-	
+
+	private JwtEncoder accessTokenEncoder;
+    private JwtEncoder refreshTokenEncoder;
+
+    public void setAccessTokenEncoder(JwtEncoder accessTokenEncoder) {
+        this.accessTokenEncoder = accessTokenEncoder;
+    }
+
+    public void setRefreshTokenEncoder(JwtEncoder refreshTokenEncoder) {
+        this.refreshTokenEncoder = refreshTokenEncoder;
+    }
 	private String createAccessToken(Authentication authentication) { 
 		User user = (User) authentication.getPrincipal(); 
 		Instant now = Instant.now(); 

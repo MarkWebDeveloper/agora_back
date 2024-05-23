@@ -11,52 +11,65 @@ import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
 
 import de.stella.agora_web.user.model.User;
-import de.stella.agora_web.user.repository.UserRepository;
+import de.stella.agora_web.user.repository.UserRepository; 
+
+
 
 @Service
-public class UserManager implements UserDetailsManager {
+public class UserManager implements UserDetailsManager { 
 
-    @Autowired
-    UserRepository userRepository;
+	@Autowired
+	UserRepository userRepository; 
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    PasswordEncoder passwordEncoder;
-
-    @Override
-    public void createUser(UserDetails user) {
-        ((User) user).setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepository.save((User) user);
+    public UserManager(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
     }
 
-    @Override
-    public void updateUser(UserDetails user) {
-        // You can implement this method to update user details if needed
-        // For example, updating roles or other user information
-    }
+	@Override
+	public void createUser(UserDetails user) { 
+		
+		((User) user).setPassword(passwordEncoder.encode(user.getPassword())); 
+		// Save the user in the repository 
+		userRepository.save((User) user); 
+	} 
 
-    @Override
-    public void deleteUser(String username) {
-        // You can implement this method to delete a user by username
-        // Typically used when a user wants to delete their account
-    }
+	@Override
+	public void updateUser(UserDetails user) { 
+		// You can implement this method to update user details if needed 
+		// For example, updating roles or other user information 
+	} 
 
-    @Override
-    public void changePassword(String oldPassword, String newPassword) {
-        // You can implement this method to change the user's password
-        // For example, when a user wants to change their password
-    }
+	@Override
+	public void deleteUser(String username) { 
+		// You can implement this method to delete a user by username 
+		// Typically used when a user wants to delete their account 
+	} 
 
-    @Override
-    public boolean userExists(String username) {
-        return userRepository.existsByUsername(username);
-    }
+	@Override
+	public void changePassword(String oldPassword, String newPassword) { 
+		// You can implement this method to change the user's password 
+		// For example, when a user wants to change their password 
+	} 
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> userOptional = userRepository.findByUsername(username);
-        if (userOptional.isEmpty()) {
-            throw new UsernameNotFoundException(MessageFormat.format("User with username {0} not found", username));
-        }
-        return userOptional.get();
-    }
-}
+	@Override
+	public boolean userExists(String username) { 
+		
+		return false; 
+	} 
+
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException { 
+		// Fetch the user from the repository by username 
+		Optional<User> userOptional = userRepository.findByUsername(username); 
+
+		// Check if the user exists 
+		if (userOptional.isEmpty()) { 
+			throw new UsernameNotFoundException(MessageFormat.format("User with username {0} not found", username)); 
+		} 
+
+		// Return the UserDetails extracted from the User entity 
+		return userOptional.get(); 
+	} 
+
+} 

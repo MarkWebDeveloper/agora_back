@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.BearerTokenAuthenticationToken;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationProvider;
@@ -23,8 +22,7 @@ import de.stella.agora_web.user.model.User;
 @RestController
 @RequestMapping("/api/auth") 
 public class AuthController { 
-	@Autowired
-	UserDetailsManager userDetailsManager; 
+	
 	@Autowired
 	TokenGenerator tokenGenerator; 
 	@Autowired
@@ -32,15 +30,19 @@ public class AuthController {
 	@Autowired
 	@Qualifier("jwtRefreshTokenAuthProvider") 
 	JwtAuthenticationProvider refreshTokenAuthProvider; 
+    private final UserDetailsManager userDetailsManager;
 
+    public AuthController(UserDetailsManager userDetailsManager) {
+        this.userDetailsManager = userDetailsManager;
+    }
 	@SuppressWarnings("rawtypes")
-    @PostMapping("/register") 
+	@PostMapping("/register") 
 	public ResponseEntity register(@RequestBody SignUp signupDTO) { 
-		UserDetails user = new User(signupDTO.getUserName(), signupDTO.getPassword()); 
+		User user = new User(signupDTO.getUserName(), signupDTO.getPassword()); 
 		userDetailsManager.createUser(user); 
 
 		@SuppressWarnings("unchecked")
-        Authentication authentication = UsernamePasswordAuthenticationToken.authenticated(user, signupDTO.getPassword(), Collections.EMPTY_LIST); 
+		Authentication authentication = UsernamePasswordAuthenticationToken.authenticated(user, signupDTO.getPassword(), Collections.EMPTY_LIST); 
 
 		return ResponseEntity.ok(tokenGenerator.createToken(authentication)); 
 	} 
@@ -48,19 +50,18 @@ public class AuthController {
 
 
 	@SuppressWarnings("rawtypes")
-    @PostMapping("/login") 
+	@PostMapping("/login") 
 	public ResponseEntity login(@RequestBody Login loginDTO) { 
 		Authentication authentication = daoAuthenticationProvider.authenticate(UsernamePasswordAuthenticationToken.unauthenticated(loginDTO.getUserName(), loginDTO.getPassword())); 
 
 		return ResponseEntity.ok(tokenGenerator.createToken(authentication)); 
 	} 
 
-	@SuppressWarnings("rawtypes")
-    @PostMapping("/token") 
+	@SuppressWarnings({ "rawtypes", "unused" })
+	@PostMapping("/token") 
 	public ResponseEntity token(@RequestBody Token tokenDTO) { 
 		Authentication authentication = refreshTokenAuthProvider.authenticate(new BearerTokenAuthenticationToken(tokenDTO.getRefreshToken())); 
-		@SuppressWarnings("unused")
-        Jwt jwt = (Jwt) authentication.getCredentials(); 
+		Jwt jwt = (Jwt) authentication.getCredentials(); 
 		// check if present in db and not revoked, etc 
 
 		return ResponseEntity.ok(tokenGenerator.createToken(authentication)); 
