@@ -1,4 +1,4 @@
-package de.stella.agora_web.auth;
+package de.stella.agora_web.controller;
 
 import java.util.HashMap;
 import java.util.Map;

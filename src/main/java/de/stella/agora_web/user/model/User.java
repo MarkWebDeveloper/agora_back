@@ -1,5 +1,6 @@
 package de.stella.agora_web.user.model;
 
+import java.util.Collection;
 import java.util.Set;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -19,6 +20,7 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -39,7 +41,7 @@ public class User {
     private String email;
 
    
-    public User() {
+    public User(Object object, @Size(min = 4) String name, @Size(min = 4) String username2, @Size(min = 8) String password2, @Size(min = 8) String repeatedPassword) {
     }
 
     public User(Long id, String username, String password, Set<Role> roles) {
@@ -48,6 +50,9 @@ public class User {
         this.password = password;
         this.roles = roles;
     }
+
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
 
     public boolean hasRole(String role) {
         return false;
@@ -68,6 +73,14 @@ public GrantedAuthority getRole() {
 
     return getRole();
    
+}
+
+public Collection<? extends GrantedAuthority> getAuthorities() {
+ return getAuthorities();
+}
+
+public Object getName() {
+    return getName();
 }
 
 

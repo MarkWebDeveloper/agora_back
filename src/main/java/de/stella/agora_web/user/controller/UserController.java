@@ -1,55 +1,30 @@
 package de.stella.agora_web.user.controller;
 
-import java.util.List;
-import java.util.Optional;
+import java.nio.file.AccessDeniedException;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import de.stella.agora_web.user.model.User;
-import de.stella.agora_web.user.services.impl.UserServiceImpl;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.Setter;
+import de.stella.agora_web.config.authorization.AuthenticationService;
+import lombok.RequiredArgsConstructor;
 
-@Getter
-@Setter
 @RestController
-@RequestMapping(path = "${api-endpoint}/users")
+@RequestMapping("/users")
+@RequiredArgsConstructor
 public class UserController {
+    private final AuthenticationService authenticationService;
 
-     UserServiceImpl service;
-
-    public UserController(UserServiceImpl service) {
-        this.service = service;
-    }
-
-    @GetMapping(path = "")
-    public List<User> index () {
-        return service.getAll();
-    }
-
-
-    @GetMapping("/{userId}")
-    public ResponseEntity<User> getById(@PathVariable Long userId) {
-        Optional<User> user = service.findById(userId);
-        if (user.isPresent()) {
-            return ResponseEntity.ok(user.get());
-        } else {
-            return ResponseEntity.notFound().build();
+    @GetMapping("/{username}")
+    public ResponseEntity<String> validateUsernameLoggedByUsername(@PathVariable(name = "username")String username) throws AccessDeniedException {
+        String rta = "";
+        if(Boolean.TRUE.equals(authenticationService.validateAuthLoggedByUsername(username))){
+            rta = "The username passed has access, since it is the one that is currently authenticated.";
+        }else{
+            throw new AccessDeniedException("The username passed has no access, it is NOT the authenticated user.");
         }
+        return ResponseEntity.ok(rta);
     }
-
-
-    @PostMapping(path = "")
-    public ResponseEntity<User> create(@NonNull @RequestBody User user) {
-        User newUser = service.save(user);
-        return ResponseEntity.status(201).body(newUser);
-    }
-    
 }
