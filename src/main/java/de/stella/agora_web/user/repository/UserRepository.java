@@ -27,18 +27,19 @@ import de.stella.agora_web.user.model.User;
 
     
 @Repository 
-public interface UserRepository extends JpaRepository<User, String>{ 
+public interface UserRepository extends JpaRepository<User, Long>{ 
     boolean existsByUsername(String username); 
     Optional<User> findByUsername(String username); 
     
-    @SuppressWarnings("null")
+
     public User getReferenceById(String string);
 
-      @SuppressWarnings("null")
     Optional<User> findById(String id);
+    @SuppressWarnings("null")
     void deleteById(Long id);
     Optional<User> findByUsernameAndPassword(String username, String password);
     List<User> findAllById(List<Long> ids);
+    @SuppressWarnings("null")
     Optional<User> findById(Long id);
     
 } 
