@@ -9,13 +9,14 @@ import de.stella.agora_web.profiles.model.Profile;
 
 public class ProfileTest {
 
+    @SuppressWarnings("unused")
     private Profile profile;
 
     private Profile testProfile;
 
     @BeforeEach
     public void setUp() {
-        testProfile = new Profile();
+        testProfile = new Profile(null, null, null, null, null, null, null, null, null, null);
     }
 
     @Test

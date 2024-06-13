@@ -66,6 +66,7 @@ public class SecurityUser implements UserDetails {
         return true;
     }
 
+    @SuppressWarnings("static-access")
     public Long getId() {
         return Long.parseLong(this.id);
     }

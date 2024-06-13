@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
@@ -139,5 +140,16 @@ public class KeyUtils {
     // Devuelve la clave privada de refresco de tokens
     public RSAPrivateKey getRefreshTokenPrivateKey() { 
         return (RSAPrivateKey) getRefreshTokenKeyPair().getPrivate(); 
+    }
+
+    public static RSAPublicKey loadPublicKey(String publicKeyPath) throws IOException {
+        byte[] keyBytes = Files.readAllBytes(Paths.get(publicKeyPath));
+        EncodedKeySpec keySpec = new X509EncodedKeySpec(keyBytes);
+        try {
+            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+            return (RSAPublicKey) keyFactory.generatePublic(keySpec);
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+            throw new RuntimeException(e);
+        }
     }; 
 }

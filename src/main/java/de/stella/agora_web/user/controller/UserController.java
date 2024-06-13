@@ -2,8 +2,6 @@ package de.stella.agora_web.user.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,9 +33,9 @@ public class UserController {
         UserRepository userRepository; 
   
         @GetMapping("/user/getById/{id}")
-        @PreAuthorize("#user.id == #id") 
-        public ResponseEntity<Object> user(@AuthenticationPrincipal User user, @PathVariable String id) { 
-            return ResponseEntity.ok(UserDTO.from(userRepository.findById(id).orElseThrow())); 
+        public ResponseEntity<Object> user(@PathVariable Long id) { 
+            User user = service.findById(id).orElseThrow();
+            return ResponseEntity.ok(UserDTO.from(user)); 
         }
 
 

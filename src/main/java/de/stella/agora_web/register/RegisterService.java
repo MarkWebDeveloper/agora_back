@@ -1,4 +1,4 @@
-package de.stella.agora_web.user.register;
+package de.stella.agora_web.register;
 
 
 
@@ -30,39 +30,21 @@ public class RegisterService {
 
     public String createUser(SignUpDTO signupDTO) {
 
-        User newUser = new User(null, signupDTO.getUsername(), signupDTO.getPassword(), null); 
+        String passwordEncoded = encoder.encode("bcrypt", encoder.decode("base64", signupDTO.getPassword()));
 
-        System.out.println(newUser.getId());
+        User newUser = userRepository.save(new User(null, signupDTO.getUsername(), passwordEncoded, null));
 
-        String passwordDecoded = encoder.decode("base64", newUser.getPassword());
-        String passwordEncoded = encoder.encode("bcrypt", passwordDecoded);
-        
-        newUser.setPassword(passwordEncoded);
         assignDefaultRole(newUser);
 
-        userRepository.save(newUser);
-
-        User savedUser = userRepository.getReferenceById(newUser.getId().toString());
-
         Profile newProfile = Profile.builder()
-                .id(savedUser.getId())
-                .user(savedUser)
-                .email(savedUser.getUsername())
-                .firstName("")
-                .firstLastName("")
-                .secondLastName("")
-                .address("")
-                .postalCode("")
-                .numberPhone("")
-                .city("")
-                .province("")
+                .id(newUser.getId())
+                .username(newUser.getUsername())
+                .email(newUser.getUsername())
                 .build();
 
         profileRepository.save(newProfile);
 
-        String message = "User with the username " + newUser.getUsername() + " is successfully created.";
-
-        return message;
+        return "User with the username " + newUser.getUsername() + " is successfully created.";
 
     }
 

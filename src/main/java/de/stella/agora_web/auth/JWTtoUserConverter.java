@@ -1,6 +1,7 @@
 package de.stella.agora_web.auth;
 
 
+
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -12,7 +13,7 @@ import de.stella.agora_web.user.repository.UserRepository;
 
   
   
-   
+  
 @Component
 public class JWTtoUserConverter implements Converter<Jwt, UsernamePasswordAuthenticationToken> { 
 
@@ -25,12 +26,14 @@ public class JWTtoUserConverter implements Converter<Jwt, UsernamePasswordAuthen
     @Override
     public UsernamePasswordAuthenticationToken convert(Jwt source) { 
 
-        User user = userRepository.findById(source.getSubject()).orElseThrow();
+        Long userId = Long.parseLong(source.getSubject());
+        User user = userRepository.findById(userId).orElseThrow();
 
          SecurityUser securityUser = new SecurityUser(user); 
-            user.setId(Long.parseLong(source.getSubject())); 
+            user.setId(userId);
             return new UsernamePasswordAuthenticationToken(securityUser, securityUser.getPassword(), securityUser.getAuthorities()); 
     } 
       
   
-} 
+}
+

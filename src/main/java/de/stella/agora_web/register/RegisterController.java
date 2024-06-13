@@ -1,4 +1,4 @@
-package de.stella.agora_web.user.register;
+package de.stella.agora_web.register;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,7 +18,9 @@ public class RegisterController {
 
     TokenGenerator tokenGenerator; 
 
-
+    public RegisterController(RegisterService service) {
+        this.service = service;
+    }
 
     @PostMapping("/all/register") 
     public ResponseEntity<String> register(@RequestBody SignUpDTO signupDTO) { 
