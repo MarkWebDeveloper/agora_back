@@ -36,7 +36,7 @@ public class PostServiceImpl implements IPostService {
     @Override
     public Post createPost(PostDTO postDTO, Long userId) {
         Optional<User> user = userService.findById(userId);
-        if (!user.isPresent()) {
+        if (user.isEmpty()) {
             throw new UserNotFoundException("User not found with ID: " + userId);
         }
 

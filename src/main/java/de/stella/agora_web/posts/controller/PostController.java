@@ -42,7 +42,7 @@ public class PostController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Post> show(@NonNull @PathVariable("id") Long id) {
+    public ResponseEntity<Post> show(@NonNull @PathVariable Long id) {
         Post post = postService.getById(id);
         return ResponseEntity.status(HttpStatus.OK).body(post);
     }
@@ -60,7 +60,7 @@ public class PostController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Post> update(@PathVariable("id") Long id,  @RequestBody PostDTO postDTO) {
+    public ResponseEntity<Post> update(@PathVariable Long id,  @RequestBody PostDTO postDTO) {
         Post post = postService.update(postDTO, id);
         return ResponseEntity.accepted().body(post);
     }

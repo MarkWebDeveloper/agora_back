@@ -39,7 +39,7 @@ public class AuthController {
         
         // Assuming you can retrieve the user object from the username
         Optional<User> optionalUser = userService.findByUsername(username);
-        if (!optionalUser.isPresent()) {
+        if (optionalUser.isEmpty()) {
             throw new UsernameNotFoundException("User not found");
         }
         User user = optionalUser.get();
