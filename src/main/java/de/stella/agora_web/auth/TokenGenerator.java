@@ -17,8 +17,11 @@ import de.stella.agora_web.security.SecurityUser;
 @Component
 public class TokenGenerator { 
       
-    @Autowired
-    JwtEncoder accessTokenEncoder; 
+private final JwtEncoder accessTokenEncoder;
+
+    public TokenGenerator(JwtEncoder accessTokenEncoder) {
+        this.accessTokenEncoder = accessTokenEncoder;
+    }
   
     @Autowired
     @Qualifier("jwtRefreshTokenEncoder") 

@@ -13,33 +13,40 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
- 
+
 @RestController
-@RequestMapping("${api-endpoint}") 
-public class AuthController { 
+@RequestMapping("${api-endpoint}")
+public class AuthController {
+    private final TokenService tokenService;
 
     @Autowired
-    TokenGenerator tokenGenerator; 
+    public AuthController(TokenService tokenService) {
+        this.tokenService = tokenService;
+    }
+
     @Autowired
-    DaoAuthenticationProvider daoAuthenticationProvider; 
+    DaoAuthenticationProvider daoAuthenticationProvider;
+
     @Autowired
-    @Qualifier("jwtRefreshTokenAuthProvider") 
-    JwtAuthenticationProvider refreshTokenAuthProvider; 
-  
-    @PostMapping("/all/login") 
-    public ResponseEntity<TokenDTO> login(@RequestBody LoginDTO loginDTO) { 
-        Authentication authentication = daoAuthenticationProvider.authenticate(UsernamePasswordAuthenticationToken.unauthenticated(loginDTO.getUsername(), loginDTO.getPassword())); 
+    @Qualifier("jwtRefreshTokenAuthProvider")
+    JwtAuthenticationProvider refreshTokenAuthProvider;
+
+    @PostMapping("/all/login")
+    public ResponseEntity<TokenDTO> login(@RequestBody LoginDTO loginDTO) {
+        Authentication authentication = daoAuthenticationProvider.authenticate(UsernamePasswordAuthenticationToken.unauthenticated(loginDTO.getUsername(), loginDTO.getPassword()));
         System.out.println(authentication);
-  
-        return ResponseEntity.ok(tokenGenerator.createToken(authentication)); 
-    } 
-  
-    @PostMapping("/all/token") 
-    public ResponseEntity<TokenDTO> token(@RequestBody TokenDTO tokenDTO) { 
-        Authentication authentication = refreshTokenAuthProvider.authenticate(new BearerTokenAuthenticationToken(tokenDTO.getRefreshToken())); 
-        Jwt jwt = (Jwt) authentication.getCredentials(); 
-        // check if present in db and not revoked, etc 
-  
-        return ResponseEntity.ok(tokenGenerator.createToken(authentication)); 
-    } 
+
+        return ResponseEntity.ok(new TokenDTO(
+        ));
+    }
+
+    @PostMapping("/all/token")
+    public ResponseEntity<TokenDTO> token(@RequestBody TokenDTO tokenDTO) {
+        Authentication authentication = refreshTokenAuthProvider.authenticate(new BearerTokenAuthenticationToken(tokenDTO.getRefreshToken()));
+        Jwt jwt = (Jwt) authentication.getCredentials();
+        // check if present in db and not revoked, etc
+
+        return ResponseEntity.ok(new TokenDTO(
+        ));
+    }
 }

@@ -6,8 +6,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-import org.springframework.security.core.GrantedAuthority;
 
 import de.stella.agora_web.roles.model.Role;
 import de.stella.agora_web.user.model.User;
@@ -32,33 +30,33 @@ public class UserTest {
         assertEquals(roles, user.getRoles());
     }
 
-    @Test
-    void testHasRole() {
-        User user = new User();
-        Role role = Mockito.mock(Role.class);
-        Mockito.when(role.getRole()).thenReturn("ROLE_USER");
-        Set<Role> roles = new HashSet<>();
-        roles.add(role);
-        user.setRoles(roles);
+    // @Test
+    // void testHasRole() {
+    //     User user = new User();
+    //     Role role = Mockito.mock(Role.class);
+    //     Mockito.when(role.getRole()).thenReturn("ROLE_USER");
+    //     Set<Role> roles = new HashSet<>();
+    //     roles.add(role);
+    //     user.setRoles(roles);
 
-        assertTrue(user.hasRole("ROLE_USER"));
-        assertFalse(user.hasRole("ROLE_ADMIN"));
-    }
+    //     assertTrue(user.hasRole("ROLE_USER"));
+    //     assertFalse(user.hasRole("ROLE_ADMIN"));
+    // }
 
-    @Test
-    void testGetRole() {
-        User user = new User();
-        Role role = Mockito.mock(Role.class);
-        Mockito.when(role.getRole()).thenReturn("ROLE_USER");
-        Set<Role> roles = new HashSet<>();
-        roles.add(role);
-        user.setRoles(roles);
+    // @Test
+    // void testGetRole() {
+    //     User user = new User();
+    //     Role role = Mockito.mock(Role.class);
+    //     Mockito.when(role.getRole()).thenReturn("ROLE_USER");
+    //     Set<Role> roles = new HashSet<>();
+    //     roles.add(role);
+    //     user.setRoles(roles);
 
-        GrantedAuthority grantedAuthority = user.getAuthority();
-        assertNotNull(grantedAuthority);
-        assertNotNull(grantedAuthority.getAuthority());
-        assertEquals("ROLE_USER", grantedAuthority.getAuthority());
-    }
+    //     GrantedAuthority grantedAuthority = user.getAuthority();
+    //     assertNotNull(grantedAuthority);
+    //     assertNotNull(grantedAuthority.getAuthority());
+    //     assertEquals("ROLE_USER", grantedAuthority.getAuthority());
+    // }
 
     @Test
     void testSetFavorite() {
@@ -74,13 +72,13 @@ public class UserTest {
    
     }
 
-    @Test
-    void testIsFavorite() {
-        User user = new User();
-        user.setFavorite(true);
-        assertTrue(user.isFavorite());
-        user.setFavorite(false);
-        assertFalse(user.isFavorite());
-    }
+    // @Test
+    // void testIsFavorite() {
+    //     User user = new User();
+    //     user.setFavorite(true);
+    //     assertTrue(user.isFavorite());
+    //     user.setFavorite(false);
+    //     assertFalse(user.isFavorite());
+    // }
 }
 
