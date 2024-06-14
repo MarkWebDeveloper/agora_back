@@ -1,6 +1,7 @@
 package de.stella.agora_web.user.model;
 
 import java.util.Set;
+import java.util.function.BooleanSupplier;
 
 import org.springframework.security.core.GrantedAuthority;
 
@@ -60,5 +61,16 @@ public class User {
 
     public GrantedAuthority getAuthority() {
         return null;
+    }
+
+    public BooleanSupplier isFavorite() {
+        return () -> profile != null && profile.isFavorite();
+    }
+
+    public void setFavorite(boolean favorite) {
+        if (this.profile == null) {
+            this.profile = new Profile(id, email, email, email, email, email, email, email, email, email);
+        }
+        this.profile.setFavorite(favorite);
     }
 }

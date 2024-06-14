@@ -1,5 +1,11 @@
 -- Inserciones en la tabla 'users'
-INSERT INTO users (username, password, email, first_name, first_last_name, second_last_name, address, city, province, postal_code, number_phone, relationship) 
+INSERT INTO users (username, password, email) VALUES ('admin', '$2a$10$4S7iF8T4UdU86lu/kTY2WOIQ8Q7fYAYTjeOPLZH74C2Gyd7P/PDhu', 'admin@gmail.com');
+INSERT INTO users (username, password, email) VALUES ('user1', '$2a$10$Gj7XQGLifS79T.qeyHTCA.dKhs3nrAmJVJ.i5G2cB9R2.mLELHPlK$2a$10$Gj7XQGLifS79T.qeyHTCA.dKhs3nrAmJVJ.i5G2cB9R2.mLELHPlK', 'user1@gmail.com');
+INSERT INTO users (username, password, email) VALUES ('user2', '$2a$10$ye/zFlMvCCx7tff6ExhUs.JjNUwrCUdFsu.N27GvpKnztMlg/gScS', 'user2@gmail.com');
+INSERT INTO users (username, password, email) VALUES ('user3', '$2a$10$7Vg3cAi0IJ4e/WvJnpRNxuaUXtLriNqenUd6ygjRSXgGjsP8i9doi', 'user3@gmail.com');
+
+-- Inserciones en la tabla 'profiles'
+INSERT INTO profiles (username, password, email, first_name, first_last_name, second_last_name, address, city, province, postal_code, number_phone, relationship) 
 VALUES 
   ('admin', '$2a$10$4S7iF8T4UdU86lu/kTY2WOIQ8Q7fYAYTjeOPLZH74C2Gyd7P/PDhu', 'admin@gmail.com', '', '', '', '', '', '', '', '', ''),
   ('user1', '$2a$10$Gj7XQGLifS79T.qeyHTCA.dKhs3nrAmJVJ.i5G2cB9R2.mLELHPlK', 'user1@gmail.com', '', '', '', '', '', '', '', '', ''),
@@ -21,6 +27,7 @@ INSERT INTO posts (title, message, user_id) VALUES
   ('Post 1', 'Este es el primer post.', 1),
   ('Post 2', 'Este es el segundo post.', 1),
   ('Post 3', 'Este es el tercer post.', 1);
+
 
 -- Inserciones en la tabla 'replies'
 INSERT INTO replies (message, user_id, post_id) VALUES
