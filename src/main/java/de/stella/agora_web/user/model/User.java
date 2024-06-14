@@ -4,11 +4,8 @@ import java.util.Set;
 
 import org.springframework.security.core.GrantedAuthority;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
-import de.stella.agora_web.posts.model.Post;
+import de.stella.agora_web.profiles.model.Profile;
 import de.stella.agora_web.roles.model.Role;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -17,31 +14,38 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
-
-    @Getter
-    @Setter
-    
+@Getter
+@Setter
 @Entity
-@Table (name = "users")
+@Table(name = "users")
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)    
-    @Column (name = "id_user")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String username;
-    private String firstName;
-    private String lastName;
-    private String nickname;
-    private String relationship;
-    private String email;
+
     private String password;
-   
+
+    private String email;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "roles_users", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "profile_id")
+    private Profile profile;
+
+    public boolean hasRole(String role) {
+        return roles.stream().anyMatch(r -> r.getName().equals(role));
+    }
+
     public User() {
     }
     public User(Long id, String username, String password, String firstName, String lastName, String nickname, String relationship, String email, Set<Role> roles) {
@@ -57,39 +61,7 @@ public class User {
     }
 
 
-    public boolean hasRole(String role) {
-        return false;
-       
+    public GrantedAuthority getAuthority() {
+        return null;
     }
-
-@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-@JsonManagedReference
-private Set<Post> posts;
-
-@ManyToMany(fetch = FetchType.LAZY)
-@JoinTable(name = "roles_users", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
-@JsonManagedReference
-private Set<Role> roles;
-
-
-public GrantedAuthority getRole() {
-
-    return getRole();
-   
 }
-
-public User orElseThrow(Object object) {
-    return object == null ? null : this;
-}
-
-public boolean isPresent() {
-   return true;
-}
-
-public User get() {
-    return this;
-}
-
-}
-
-

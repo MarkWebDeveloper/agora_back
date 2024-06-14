@@ -35,7 +35,7 @@ public class ReplysController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Reply> show(@NonNull @PathVariable("id") Long id) {
+    public ResponseEntity<Reply> show(@NonNull @PathVariable Long id) {
         Reply reply = replyService.getReplyById(id);
         return ResponseEntity.status(HttpStatus.OK).body(reply);
     }
@@ -54,7 +54,7 @@ public class ReplysController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Reply> update(@PathVariable("id") Long id, @SuppressWarnings("rawtypes") @RequestBody ReplyDTO replyDTO) {
+    public ResponseEntity<Reply> update(@PathVariable Long id, @SuppressWarnings("rawtypes") @RequestBody ReplyDTO replyDTO) {
         Reply reply = replyService.updateReply(id, replyDTO);
         return ResponseEntity.accepted().body(reply);
     }
