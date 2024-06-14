@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
@@ -23,15 +22,17 @@ import java.util.Objects;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Component;
 
-  
+import lombok.extern.slf4j.Slf4j;
 
+   
+@Component
+@Slf4j
 public class KeyUtils { 
-    // Inyección de dependencias
     @Autowired
     Environment environment; 
   
-    // Inyección de properties
     @Value("${access-token.private}") 
     private String accessTokenPrivateKeyPath; 
   
@@ -44,38 +45,31 @@ public class KeyUtils {
     @Value("${refresh-token.public}") 
     private String refreshTokenPublicKeyPath; 
   
-    // Almacenamiento de pares de claves para acceso y refresco de tokens
     private KeyPair _accessTokenKeyPair; 
     private KeyPair _refreshTokenKeyPair; 
   
-    // Obtiene el par de claves de acceso a tokens
     private KeyPair getAccessTokenKeyPair() { 
         if (Objects.isNull(_accessTokenKeyPair)) { 
-            // Si no se ha generado el par de claves, lo genera y lo almacena
             _accessTokenKeyPair = getKeyPair(accessTokenPublicKeyPath, accessTokenPrivateKeyPath); 
         } 
         return _accessTokenKeyPair; 
     } 
   
-    // Obtiene el par de claves de refresco de tokens
     private KeyPair getRefreshTokenKeyPair() { 
         if (Objects.isNull(_refreshTokenKeyPair)) { 
-            // Si no se ha generado el par de claves, lo genera y lo almacena
             _refreshTokenKeyPair = getKeyPair(refreshTokenPublicKeyPath, refreshTokenPrivateKeyPath); 
         } 
         return _refreshTokenKeyPair; 
     } 
   
-    // Genera un par de claves y lo almacena en ficheros
     private KeyPair getKeyPair(String publicKeyPath, String privateKeyPath) { 
         KeyPair keyPair; 
   
-        // Creación de objetos File para los ficheros de claves
         File publicKeyFile = new File(publicKeyPath); 
         File privateKeyFile = new File(privateKeyPath); 
   
-        // Si los ficheros de claves existen, los lee y devuelve el par de claves
         if (publicKeyFile.exists() && privateKeyFile.exists()) { 
+            //log.info("loading keys from file: {}, {}", publicKeyPath, privateKeyPath); 
             try { 
                 KeyFactory keyFactory = KeyFactory.getInstance("RSA"); 
   
@@ -93,18 +87,17 @@ public class KeyUtils {
                 throw new RuntimeException(e); 
             } 
         } else { 
-            // Si los ficheros de claves no existen, si el entorno es de producción, lanza una excepción
             if (Arrays.stream(environment.getActiveProfiles()).anyMatch(s -> s.equals("prod"))) { 
                 throw new RuntimeException("public and private keys don't exist"); 
             } 
         } 
   
-        // Si el entorno no es de producción, crea los directorios y ficheros de claves
         File directory = new File("access-refresh-token-keys"); 
         if (!directory.exists()) { 
             directory.mkdirs(); 
         } 
         try { 
+            //log.info("Generating new public and private keys: {}, {}", publicKeyPath, privateKeyPath); 
             KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA"); 
             keyPairGenerator.initialize(2048); 
             keyPair = keyPairGenerator.generateKeyPair(); 
@@ -125,31 +118,16 @@ public class KeyUtils {
     } 
   
   
-    // Devuelve la clave pública de acceso a tokens
     public RSAPublicKey getAccessTokenPublicKey() { 
         return (RSAPublicKey) getAccessTokenKeyPair().getPublic(); 
     }; 
-    // Devuelve la clave privada de acceso a tokens
     public RSAPrivateKey getAccessTokenPrivateKey() { 
         return (RSAPrivateKey) getAccessTokenKeyPair().getPrivate(); 
     }; 
-    // Devuelve la clave pública de refresco de tokens
     public RSAPublicKey getRefreshTokenPublicKey() { 
         return (RSAPublicKey) getRefreshTokenKeyPair().getPublic(); 
     }; 
-    // Devuelve la clave privada de refresco de tokens
     public RSAPrivateKey getRefreshTokenPrivateKey() { 
         return (RSAPrivateKey) getRefreshTokenKeyPair().getPrivate(); 
-    }
-
-    public static RSAPublicKey loadPublicKey(String publicKeyPath) throws IOException {
-        byte[] keyBytes = Files.readAllBytes(Paths.get(publicKeyPath));
-        EncodedKeySpec keySpec = new X509EncodedKeySpec(keyBytes);
-        try {
-            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-            return (RSAPublicKey) keyFactory.generatePublic(keySpec);
-        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-            throw new RuntimeException(e);
-        }
     }; 
 }

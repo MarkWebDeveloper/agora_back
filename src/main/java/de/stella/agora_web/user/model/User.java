@@ -7,6 +7,7 @@ import org.springframework.security.core.GrantedAuthority;
 
 import de.stella.agora_web.profiles.model.Profile;
 import de.stella.agora_web.roles.model.Role;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -26,10 +27,10 @@ import lombok.Setter;
 @Table(name = "users")
 public class User {
 
-   
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "id_user")
+    private Long id; 
 
     private String username;
 
@@ -38,7 +39,7 @@ public class User {
     private String email;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "roles_users", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+    @JoinTable(name = "role_users", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
     
     @OneToOne(fetch = FetchType.LAZY)
@@ -53,12 +54,18 @@ public class User {
     }
 
     public User(Long id, String username, String password, Set<Role> roles) {
+        super();
         this.id = id;
         this.username = username;
         this.password = password;
         this.roles = roles;
     }
-
+    public User( String userName, String password) { 
+        super(); 
+          
+        this.username = userName; 
+        this.password = password; 
+    } 
     public GrantedAuthority getAuthority() {
         return null;
     }
