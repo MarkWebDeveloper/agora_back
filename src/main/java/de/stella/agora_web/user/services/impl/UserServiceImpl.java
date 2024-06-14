@@ -5,7 +5,6 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import de.stella.agora_web.user.controller.dto.UserDTO;
 import de.stella.agora_web.user.model.User;
 import de.stella.agora_web.user.persistence.IUserDAO;
 import de.stella.agora_web.user.services.IUserService;
@@ -30,7 +29,7 @@ public class UserServiceImpl implements IUserService {
         return userDAO.findById(id);
     }
 
-    public User findByUsername(String username) {
+    public Optional<User> findByUsername(String username) {
         return userDAO.findByUsername(username);
     }
 
@@ -51,7 +50,7 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public boolean checkUserRole(String username, String role) {
-        User userOptional = userDAO.findByUsername(username);
+        Optional<User> userOptional = userDAO.findByUsername(username);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
             return user.hasRole(role);
@@ -76,11 +75,6 @@ public class UserServiceImpl implements IUserService {
     public  Optional<User> findUserById(Long userId) {
         return userDAO.findById(userId);
 
-
-    }
-
-    public User registerUser(UserDTO userDTO) {
-return userDAO.save(userDTO.toUser());
 
     }
     

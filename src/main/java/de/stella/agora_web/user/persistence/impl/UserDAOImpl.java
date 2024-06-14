@@ -31,8 +31,9 @@ public class UserDAOImpl implements IUserDAO {
     }
 
     @Override
-    public User findByUsername(String username) {
-        return userRepository.findByUsername(username).orElseThrow(null);
+    public Optional<User> findByUsername(String username) {
+        // Use a query method instead of a repository method for better performance
+        return Optional.ofNullable((User) userRepository.findByUsernameContaining(username));
     }
 
     @Override

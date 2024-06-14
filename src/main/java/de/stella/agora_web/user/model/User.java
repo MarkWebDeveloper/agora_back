@@ -48,20 +48,28 @@ public class User {
 
     public User() {
     }
-    public User(Long id, String username, String password, String firstName, String lastName, String nickname, String relationship, String email, Set<Role> roles) {
+
+    public User(Long id, String username, String password, Set<Role> roles) {
         this.id = id;
         this.username = username;
         this.password = password;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.nickname = nickname;
-        this.relationship = relationship;
-        this.email = email;
         this.roles = roles;
     }
-
 
     public GrantedAuthority getAuthority() {
         return null;
     }
+
+    public boolean isPresent() {
+        return id != null;
+    }
+
+    public User orElseThrow(Object object) {
+        if (isPresent()) {
+            return this;
+        } else {
+            throw new IllegalStateException("User is not present");
+        }
+    }
+
 }

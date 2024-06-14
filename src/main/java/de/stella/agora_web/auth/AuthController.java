@@ -2,6 +2,7 @@ package de.stella.agora_web.auth;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,7 +38,7 @@ public class AuthController {
         }
         
         // Assuming you can retrieve the user object from the username
-        User optionalUser = userService.findByUsername(username);
+        Optional<User> optionalUser = userService.findByUsername(username);
         if (!optionalUser.isPresent()) {
             throw new UsernameNotFoundException("User not found");
         }
