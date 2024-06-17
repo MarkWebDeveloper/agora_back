@@ -3,6 +3,7 @@ package de.stella.agora_web.config;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -19,6 +20,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import de.stella.agora_web.user.services.JpaUserDetailsService;
+
 @Import(JwtSecurityConfig.class)
 @Configuration
 @EnableWebSecurity
@@ -40,12 +42,14 @@ public class SecurityConfiguration {
   SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http
       .cors(Customizer.withDefaults())
-      .csrf(csrf -> csrf.disable())
+      .csrf(csrf -> csrf.disable()) 
       .formLogin(form -> form.disable())
       .logout(out ->
         out.logoutUrl(endpoint + "/logout").deleteCookies("JSESSIONID")
       )
       .authorizeHttpRequests(auth -> auth
+      .requestMatchers(PathRequest.toH2Console()).permitAll()
+      .requestMatchers("/error").permitAll()
           // Permitir el acceso a todos los posts para usuarios registrados
           .requestMatchers(HttpMethod.GET, endpoint + "/posts/**").permitAll()
           // Permitir el acceso a la creación de posts solo para usuarios

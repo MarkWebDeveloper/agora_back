@@ -9,8 +9,8 @@ public class ProfileDTO {
 
     private Long id;
     private String firstName;
-    private String lastName1;
-    private String lastName2;
+    private String lastNameOne;
+    private String lastNameTwo;
     private String username;
     private String relationship;
     private String email;

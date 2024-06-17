@@ -11,14 +11,13 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import de.stella.agora_web.jwt.JwtAuthenticationEntryPoint;
-import de.stella.agora_web.jwt.JwtRequestFilter;
+
 
 @Configuration
 @EnableWebSecurity
 public class JwtSecurityConfig {
 
-    @Autowired
-    private JwtRequestFilter jwtRequestFilter;
+ 
 
     @Autowired
     private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
@@ -42,7 +41,7 @@ public class JwtSecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             );
 
-        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore( null, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

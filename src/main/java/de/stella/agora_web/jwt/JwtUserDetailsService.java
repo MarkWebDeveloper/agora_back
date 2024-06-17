@@ -45,4 +45,9 @@ public class JwtUserDetailsService implements UserDetailsService {
         }
         return authorities;
     }
+
+    public boolean checkPassword(UserDetails userDetails, String password) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'checkPassword'");
+    }
 }

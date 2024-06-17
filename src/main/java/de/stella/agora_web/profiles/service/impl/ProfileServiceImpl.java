@@ -92,8 +92,8 @@ public class ProfileServiceImpl implements IProfileService {
     public Profile update(ProfileDTO profileDTO, Long id) {
         Profile existingProfile = getById(id);
         existingProfile.setFirstName(profileDTO.getFirstName());
-        existingProfile.setLastName1(profileDTO.getLastName1());
-        existingProfile.setLastName2(profileDTO.getLastName2());
+        existingProfile.setLastNameOne(profileDTO.getLastNameOne());
+        existingProfile.setLastNameTwo(profileDTO.getLastNameTwo());
         existingProfile.setUsername(profileDTO.getUsername());
         existingProfile.setRelationship(profileDTO.getRelationship());
         existingProfile.setEmail(profileDTO.getEmail());
@@ -117,8 +117,8 @@ public class ProfileServiceImpl implements IProfileService {
         Profile profile = new Profile(
             profileDTO.getId(),
                 profileDTO.getFirstName(),
-                profileDTO.getLastName1(),
-                profileDTO.getLastName2(),
+                profileDTO.getLastNameOne(),
+                profileDTO.getLastNameTwo(),
                 profileDTO.getUsername(),
                 profileDTO.getRelationship(),
                 profileDTO.getEmail(),

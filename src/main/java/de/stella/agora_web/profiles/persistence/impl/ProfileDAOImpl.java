@@ -52,8 +52,8 @@ public class ProfileDAOImpl implements IProfileDAO {
     @Override
     public Profile update(Profile profile, Profile updatedProfile) {
         profile.setFirstName(updatedProfile.getFirstName());
-        profile.setLastName1(updatedProfile.getLastName1());
-        profile.setLastName2(updatedProfile.getLastName2());
+        profile.setLastNameOne(updatedProfile.getLastNameOne());
+        profile.setLastNameTwo(updatedProfile.getLastNameTwo());
         profile.setUsername(updatedProfile.getUsername());
         profile.setRelationship(updatedProfile.getRelationship());
         profile.setCity(updatedProfile.getCity());

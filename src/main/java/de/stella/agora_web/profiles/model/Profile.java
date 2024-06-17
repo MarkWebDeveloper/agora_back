@@ -24,8 +24,8 @@ public class Profile {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String firstName;
-    private String lastName1;
-    private String lastName2;
+    private String lastNameOne;
+    private String lastNameTwo;
     private String username;
     private String relationship;
     private String email;
@@ -39,11 +39,11 @@ public class Profile {
     public Profile() {
     }
 
-    public Profile ( Long id ,String firstName, String lastName1, String lastName2, String username, String relationship, String email, String password, String confirmPassword, String city) {
+    public Profile ( Long id ,String firstName, String lastNameOne, String lastNameTwo, String username, String relationship, String email, String password, String confirmPassword, String city) {
         this.id = id;
         this.firstName = firstName;
-        this.lastName1 = lastName1;
-        this.lastName2 = lastName2;
+        this.lastNameOne = lastNameOne;
+        this.lastNameTwo = lastNameTwo;
         this.username = username;
         this.relationship = relationship;
         this.email = email;
