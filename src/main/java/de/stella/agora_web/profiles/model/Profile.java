@@ -102,8 +102,8 @@ this.city = city;
             return this;
         }
 
-        public ProfileBuilder username(String username) {
-            this.username = username;
+        public ProfileBuilder username(String savedUser) {
+            this.username = savedUser;
             return this;
         }
 

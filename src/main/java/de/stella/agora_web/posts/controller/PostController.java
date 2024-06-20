@@ -20,7 +20,7 @@ import de.stella.agora_web.posts.services.IPostService;
 import lombok.NonNull;
 
 @RestController
-@RequestMapping(path = "${api-endpoint}/posts")
+@RequestMapping(path = "${api-endpoint}")
 public class PostController {
 
     private final IPostService postService;
@@ -36,37 +36,33 @@ public class PostController {
         return ResponseEntity.status(HttpStatus.CREATED).body(post);
     }
 
-    @GetMapping
+    @GetMapping(path = "/all/post")
     public List<Post> index() {
         return postService.getAllPosts();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(path = "/all/post/{id}")
     public ResponseEntity<Post> show(@NonNull @PathVariable Long id) {
         Post post = postService.getById(id);
         return ResponseEntity.status(HttpStatus.OK).body(post);
     }
 
-    @PostMapping("/store") 
+   @PostMapping(path = "admin/post") 
     public ResponseEntity<Post> store( @RequestBody PostDTO postDTO) {
         Post post = postService.save(postDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(post);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("admin/post/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         postService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("admin/post/{id}")
     public ResponseEntity<Post> update(@PathVariable Long id,  @RequestBody PostDTO postDTO) {
         Post post = postService.update(postDTO, id);
         return ResponseEntity.accepted().body(post);
     }
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Post>> getPostsByUserId(@PathVariable Long userId) {
-        List<Post> posts = postService.findPostsByUserId(userId);
-        return ResponseEntity.ok(posts);
-    }
+
 }

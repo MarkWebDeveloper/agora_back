@@ -18,7 +18,7 @@ import de.stella.agora_web.replys.services.IReplyService;
 import io.micrometer.common.lang.NonNull;
 
 @RestController
-@RequestMapping(path = "${api-endpoint}/replies")
+@RequestMapping(path = "${api-endpoint}")
 public class ReplysController {
 
     private final IReplyService replyService;
@@ -27,33 +27,29 @@ public class ReplysController {
         this.replyService = replyService;
     }
 
-    @PostMapping("/create")
+    @PostMapping("any/replies")
     @PreAuthorize("hasRole('USER','ADMIN')")
     public ResponseEntity<Reply> createReply(@SuppressWarnings("rawtypes") @RequestBody ReplyDTO replyDTO) {
         Reply reply = replyService.createReply(replyDTO, null);
         return ResponseEntity.status(HttpStatus.CREATED).body(reply);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("any/replies/{id}")
     public ResponseEntity<Reply> show(@NonNull @PathVariable Long id) {
         Reply reply = replyService.getReplyById(id);
         return ResponseEntity.status(HttpStatus.OK).body(reply);
     }
 
-    @PostMapping("/store")
-    public ResponseEntity<Reply> store(@SuppressWarnings("rawtypes") @RequestBody ReplyDTO replyDTO) {
-        Reply reply = replyService.save(replyDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(reply);
-    }
+   
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("any/replies/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         replyService.deleteReply(id);
         return ResponseEntity.noContent().build();
 
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("any/replies/{id}")
     public ResponseEntity<Reply> update(@PathVariable Long id, @SuppressWarnings("rawtypes") @RequestBody ReplyDTO replyDTO) {
         Reply reply = replyService.updateReply(id, replyDTO);
         return ResponseEntity.accepted().body(reply);

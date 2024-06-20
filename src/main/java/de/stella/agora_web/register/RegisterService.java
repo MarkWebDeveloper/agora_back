@@ -18,6 +18,8 @@ import de.stella.agora_web.user.model.User;
 import de.stella.agora_web.user.repository.UserRepository;
 import lombok.AllArgsConstructor;
 
+
+
 @Service
 @AllArgsConstructor
 public class RegisterService {
@@ -30,21 +32,29 @@ public class RegisterService {
 
     public String createUser(SignUpDTO signupDTO) {
 
-        String passwordEncoded = encoder.encode("bcrypt", encoder.decode("base64", signupDTO.getPassword()));
+        User newUser = new User(signupDTO.getUsername(), signupDTO.getPassword()); 
 
-        User newUser = userRepository.save(new User(null, signupDTO.getUsername(), passwordEncoded, null));
+        System.out.println(newUser.getId());
 
+        String passwordDecoded = encoder.decode("base64", newUser.getPassword());
+        String passwordEncoded = encoder.encode("bcrypt", passwordDecoded);
+        
+        newUser.setPassword(passwordEncoded);
         assignDefaultRole(newUser);
 
-        Profile newProfile = Profile.builder()
-                .id(newUser.getId())
-                .username(newUser.getUsername())
-                .email(newUser.getUsername())
-                .build();
+        userRepository.save(newUser);
+
+        User savedUser = userRepository.getReferenceById(newUser.getId());
+
+        Profile newProfile = new Profile(null, passwordEncoded, passwordEncoded, passwordEncoded, passwordEncoded, passwordEncoded, passwordEncoded, passwordEncoded, passwordEncoded, passwordEncoded);
+        
+        
 
         profileRepository.save(newProfile);
 
-        return "User with the username " + newUser.getUsername() + " is successfully created.";
+        String message = "User with the username " + newUser.getUsername() + " is successfully created.";
+
+        return message;
 
     }
 

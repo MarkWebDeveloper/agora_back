@@ -31,6 +31,5 @@ build/
 
 ### VS Code ###
 .vscode/
-.pem
-.key/
-access-refresh-token-keys
+ ###Keys###
+ src/main/java/dev/stella/agora_web/auth/keys/

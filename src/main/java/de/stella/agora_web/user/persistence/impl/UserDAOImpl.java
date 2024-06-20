@@ -47,10 +47,6 @@ public class UserDAOImpl implements IUserDAO {
         userRepository.deleteById(id);
     }
 
-    @Override
-    public Optional<User> findByUsernameAndPassword(String username, String password) {
-        return userRepository.findByUsernameAndPassword(username, password);
-    }
 
     @Override
     public User update(User user, User updatedUser) {
@@ -65,5 +61,10 @@ public class UserDAOImpl implements IUserDAO {
     @Override
     public User getLoggedInUser() {
        return getLoggedInUser();
+    }
+
+    @Override
+    public Optional<User> findByUsernameAndPassword(String username, String password) {
+        return ((IUserDAO) userRepository).findByUsernameAndPassword(username, password);
     }
 }
