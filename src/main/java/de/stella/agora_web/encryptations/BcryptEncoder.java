@@ -1,8 +1,6 @@
-package de.stella.agora_web.encryptations.bcryptfacade;
+package de.stella.agora_web.encryptations;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
-import de.stella.agora_web.encryptations.IEncoder;
 
 
 

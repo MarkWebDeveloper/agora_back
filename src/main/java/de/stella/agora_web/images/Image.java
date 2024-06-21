@@ -1,0 +1,60 @@
+package de.stella.agora_web.images;
+
+import java.util.Locale.Category;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.stripe.model.Product;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+
+@Entity
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builderpublic ImageBuilder profile(Profile profile) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'profile'");
+    }
+@Table(name = "images")
+public class Image {
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY) 
+    @Column(name = "id_image")
+    private Long id;
+
+    @Column(name = "image_name")
+    private String imageName;
+
+    @Column(name = "is_main_image")
+    private boolean isMainImage;
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @ManyToOne
+    @JoinColumn(name = "product_id", nullable = true)
+    private Product product;
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @OneToOne
+    @JoinColumn(name = "category_id", referencedColumnName = "id_category")
+    private Category category;
+
+    public static Object builder() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'builder'");
+    }
+}

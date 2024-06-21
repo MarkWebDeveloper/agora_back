@@ -1,8 +1,6 @@
-package de.stella.agora_web.encryptations.base64facade;
+package de.stella.agora_web.encryptations;
 
 import java.util.Base64;
-
-import de.stella.agora_web.encryptations.IEncoder;
 
 
 

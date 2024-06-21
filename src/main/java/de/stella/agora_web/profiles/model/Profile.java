@@ -63,4 +63,9 @@ public class Profile {
         // Add the logic to check if the profile has the specified role
         return false;
     }
+
+    public String getImages() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getImages'");
+    }
 }
